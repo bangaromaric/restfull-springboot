@@ -1,10 +1,12 @@
 package ga.banga.restfull.repository;
 
-import ga.banga.restfull.domain.entity.Client;
+import ga.banga.restfull.domain.entity.Utilisateur;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-public interface ClientRepository extends JpaRepository<Client, Long> {
+import java.util.Optional;
+
+public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> {
 
     @Override
     @RestResource(exported = false)
@@ -12,9 +14,12 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     @Override
     @RestResource(exported = false)
-    void delete(Client client);
+    void delete(Utilisateur client);
 
     @Override
     @RestResource(exported = false)
-    Client save(Client client);
+    <S extends Utilisateur> S save(S client);
+
+    Optional<Utilisateur> findByEmail(String email);
+
 }

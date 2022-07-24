@@ -1,9 +1,8 @@
 package ga.banga.restfull.domain.entity;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -24,7 +23,7 @@ public class Commande implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @CreatedDate
+    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date")
     private Date date;
@@ -34,6 +33,7 @@ public class Commande implements Serializable {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "client_id", nullable = false)
-    private Client client;
+    private Utilisateur client;
+
 
 }

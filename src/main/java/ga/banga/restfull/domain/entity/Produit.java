@@ -14,10 +14,8 @@ import java.io.Serializable;
 @Table(name = "produit")
 public class Produit implements Serializable {
 
-
     @Serial
     private static final long serialVersionUID = 2624655264707165215L;
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,8 +26,6 @@ public class Produit implements Serializable {
     private String designation;
 
     @Column(name = "prix_unitaire")
-    private String prixUnitaire;
-
-
+    private Double prixUnitaire;
 
 }

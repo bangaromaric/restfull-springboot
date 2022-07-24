@@ -8,8 +8,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "pagnier")
-public class Pagnier {
+@Table(name = "panier")
+public class Panier {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -18,12 +18,12 @@ public class Pagnier {
     @Column(name = "quantite", nullable = false)
     private Integer quantite;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "produit_id", nullable = false)
-    private Produit produit;
-
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
     @JoinColumn(name = "commande_id", nullable = false)
     private Commande commande;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "produit_id", nullable = false)
+    private Produit produit;
 
 }

@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "particulier")
 @DiscriminatorValue("Particulier")
-public class Particulier extends Client implements Serializable {
+public class Particulier extends Utilisateur implements Serializable {
     @Serial
     private static final long serialVersionUID = -2811171275033672021L;
 }

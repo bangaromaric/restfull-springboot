@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "entreprise")
 @DiscriminatorValue("Entreprise")
-public class Entreprise extends Client implements Serializable {
+public class Entreprise extends Utilisateur implements Serializable {
     @Serial
     private static final long serialVersionUID = 5008992829024442087L;
     @Column(name = "nif")
