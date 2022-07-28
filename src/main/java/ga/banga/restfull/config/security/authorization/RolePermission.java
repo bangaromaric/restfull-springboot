@@ -13,6 +13,7 @@ import java.util.List;
 import static java.lang.String.format;
 
 /**
+ * Permet de renvoyer les permission en fonction des tables
  * @author Romaric BANGA
  * @version 1.0
  * @since 7/9/22

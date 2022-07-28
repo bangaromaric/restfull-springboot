@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
+ * liste des roles
  * @author Romaric BANGA
  * @version 1.0
  * @since 7/9/22

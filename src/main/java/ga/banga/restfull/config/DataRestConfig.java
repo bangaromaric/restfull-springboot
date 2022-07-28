@@ -7,6 +7,7 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.validation.Validator;
 
 /**
+ * Permet d'activer la validation
  * @author Romaric BANGA
  * @version 1.0
  * @since 6/27/22
@@ -16,7 +17,6 @@ import org.springframework.validation.Validator;
 public class DataRestConfig implements RepositoryRestConfigurer {
 
     private final Validator validator;
-
     @Override
     public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
         validatingListener.addValidator("beforeCreate",this.validator);

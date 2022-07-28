@@ -35,6 +35,7 @@ import java.time.LocalDateTime;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
+ * configuration de la security
  * @author Romaric BANGA
  * @version 1.0
  * @since 7/3/22
@@ -95,6 +96,11 @@ public class SecurityConfig {
         return http.build();
 
     }
+
+    /**
+     * Permet d'ignorer certaines url
+     * @return
+     */
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
@@ -113,6 +119,10 @@ public class SecurityConfig {
         return new GrantedAuthorityDefaults(""); // Remove the ROLE_ prefix
     }
 
+    /**
+     * Permet de definir la hiérarchie des roles
+     * @return
+     */
     @Bean
     RoleHierarchy hierarchyVoter() {
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
@@ -137,10 +147,14 @@ public class SecurityConfig {
         return new CorsFilter(source);
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+//    /**
+//     * Algo de cryptage de password
+//     * @return
+//     */
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
 
 
     @Bean

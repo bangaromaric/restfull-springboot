@@ -8,11 +8,10 @@ import ga.banga.restfull.domain.dto.AuthRequest;
 import ga.banga.restfull.domain.entity.Particulier;
 import ga.banga.restfull.domain.mapper.EntrepriseMapper;
 import ga.banga.restfull.domain.mapper.ParticulierMapper;
-import ga.banga.restfull.service.UserAuthService;
+import ga.banga.restfull.service.UserService;
 import ga.banga.restfull.utils.TokenCO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +19,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -40,7 +37,7 @@ import java.util.HashMap;
 @AllArgsConstructor
 public class AuthController {
 
-    private final UserAuthService clientAuthService;
+    private final UserService clientAuthService;
 
 
     private final AuthenticationManager authenticationManager;

@@ -10,7 +10,7 @@ import ga.banga.restfull.config.security.jwt.JwtTokenUtil;
 import ga.banga.restfull.domain.constants.RolesConstants;
 import ga.banga.restfull.domain.entity.Utilisateur;
 import ga.banga.restfull.domain.exception.NotFoundException;
-import ga.banga.restfull.service.UserAuthService;
+import ga.banga.restfull.service.UserService;
 import ga.banga.restfull.utils.TokenCO;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,26 +37,13 @@ import static java.lang.String.format;
 @Service
 public class UserDetailsServiceApi implements UserDetailsService {
 
-    public static final String AUTHORITY_ADMIN = "ADMIN_A";
-//    public static final String AUTHORITY_USER = "USER_A";
-    public static final String AUTHORITY_USER = "USER";
-    public static final String AUTHORITY_SHOP = "SHOP_A";
-    public static final String READ_AUTHORITY = "OP_READ";
-    public static final String WRITE_AUTHORITY = "OP_WRITE";
-    public static final String UPDATE_AUTHORITY = "OP_UPDATE";
-    public static final String DELETE_AUTHORITY = "OP_DELETE";
-
-
-
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-
-    private final UserAuthService clientAuthService;
-
+    private final UserService clientAuthService;
 
     private final JwtTokenUtil jwtTokenUtil;
 
-    public UserDetailsServiceApi(UserAuthService clientAuthService, JwtTokenUtil jwtTokenUtil) {
+    public UserDetailsServiceApi(UserService clientAuthService, JwtTokenUtil jwtTokenUtil) {
         this.clientAuthService = clientAuthService;
         this.jwtTokenUtil = jwtTokenUtil;
     }
@@ -106,6 +93,20 @@ public class UserDetailsServiceApi implements UserDetailsService {
             authoritiesList.addAll(authorotiesProduit);
         }
 
+        if (Roles.ROLE_ENTREPRISE.getLibelle().equals(rol)) {
+            authoritiesList.add(Roles.ROLE_ENTREPRISE.getLibelle());
+            RolePermission permissionPanier = new RolePermission(Table.PANIER,
+                    new RightStandard[]{RightStandard.CREATE, RightStandard.READ});
+
+            RolePermission permissionProduit = new RolePermission(Table.PRODUIT,
+                    new RightStandard[]{RightStandard.READ});
+
+            List<String> authorotiesPanier = permissionPanier.getAuthoroties();
+            List<String> authorotiesProduit = permissionProduit.getAuthoroties();
+            authoritiesList.addAll(authorotiesPanier);
+            authoritiesList.addAll(authorotiesProduit);
+        }
+
         if (Roles.ROLE_USER.getLibelle().equals(rol)) {
             authoritiesList.add(Roles.ROLE_USER.getLibelle());
 
@@ -119,14 +120,10 @@ public class UserDetailsServiceApi implements UserDetailsService {
             authoritiesList.add(UserDetailsServiceApi.READ_AUTHORITY);
             authoritiesList.add(UserDetailsServiceApi.WRITE_AUTHORITY);*/
         }
-        if (Roles.ROLE_ADMIN.getLibelle().equals(rol)) {
-            authoritiesList.add(UserDetailsServiceApi.AUTHORITY_ADMIN);
-          /*  authoritiesList.add(UserDetailsServiceApi.AUTHORITY_USER);
-            authoritiesList.add(UserDetailsServiceApi.AUTHORITY_SHOP);*/
-        }
-        if (RolesConstants.ROLE_SHOP.equals(rol)) {
-            authoritiesList.add(UserDetailsServiceApi.AUTHORITY_SHOP);
-        }
+        if (Roles.ROLE_ADMIN.getLibelle().equals(rol))
+            authoritiesList.add(Roles.ROLE_ADMIN.getLibelle());
+
+
         return authoritiesList;
     }
 
@@ -137,7 +134,7 @@ public class UserDetailsServiceApi implements UserDetailsService {
         return getUserAuthoritiesCollection(role).stream().map(authority -> authority).collect(Collectors.joining( " " ));
     }
     public static boolean isAdmin(Collection<? extends GrantedAuthority> authorities) {
-        return authorities.contains(UserDetailsServiceApi.getAuthority(UserDetailsServiceApi.AUTHORITY_ADMIN));
+        return authorities.contains(UserDetailsServiceApi.getAuthority(Roles.ROLE_ADMIN.getLibelle()));
     }
 //	public static String getScope(Collection<? extends GrantedAuthority> authorities) {
 //		return authorities.stream().map(authority -> authority.getAuthority()).collect(Collectors.joining( " " ));
@@ -162,8 +159,6 @@ public class UserDetailsServiceApi implements UserDetailsService {
             }
             else
                 throw new BadCredentialsException("invalid password3");
-
-
 
 
         } catch (NotFoundException e) {

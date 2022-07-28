@@ -6,6 +6,7 @@ import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
 
 /**
+ * responsable d'observer les events du CRUD
  * @author Romaric BANGA
  * @version 1.0
  * @since 6/27/22

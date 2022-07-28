@@ -28,6 +28,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
+ * Controller du panier
  * @author Romaric BANGA
  * @version 1.0
  * @since 7/21/22

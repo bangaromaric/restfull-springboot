@@ -27,7 +27,7 @@ public class PanierServiceImplParticulier implements PanierService {
 
     @Override
     public Panier saveAndFlush(Panier panier) {
-        //set prix
+        //set prix avec une reduction de 5%
         panier.getCommande().setMontant(  panier.getProduit().getPrixUnitaire()  - (panier.getProduit().getPrixUnitaire()*5) /100);
         return repository.saveAndFlush(panier);
     }

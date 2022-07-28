@@ -6,7 +6,7 @@ import ga.banga.restfull.domain.entity.Particulier;
 import ga.banga.restfull.repository.UtilisateurRepository;
 import ga.banga.restfull.repository.EntrepriseRepository;
 import ga.banga.restfull.repository.ParticulierRepository;
-import ga.banga.restfull.service.UserAuthService;
+import ga.banga.restfull.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ import static java.lang.String.format;
  */
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserAuthService {
+public class UserServiceImpl implements UserService {
 
    private final UtilisateurRepository clientRepository;
    private final ParticulierRepository particulierRepository;

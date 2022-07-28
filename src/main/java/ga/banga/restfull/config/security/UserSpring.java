@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 
 /**
+ * Responsable de recuperer les informations de l'utilisateur
  * @author Romaric BANGA
  * @version 1.0
  * @since 7/6/22
