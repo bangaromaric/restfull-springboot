@@ -1,4 +1,4 @@
-package ga.banga.restfull.config;
+package ga.banga.restfull.config.validation;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
