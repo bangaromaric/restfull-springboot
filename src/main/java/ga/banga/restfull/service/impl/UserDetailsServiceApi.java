@@ -7,11 +7,11 @@ import ga.banga.restfull.domain.enumeration.RightStandard;
 import ga.banga.restfull.domain.enumeration.Roles;
 import ga.banga.restfull.domain.enumeration.Table;
 import ga.banga.restfull.config.security.jwt.JwtTokenUtil;
-import ga.banga.restfull.domain.constants.RolesConstants;
 import ga.banga.restfull.domain.entity.Utilisateur;
 import ga.banga.restfull.domain.exception.NotFoundException;
 import ga.banga.restfull.service.UserService;
 import ga.banga.restfull.utils.TokenCO;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -22,6 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -153,13 +154,13 @@ public class UserDetailsServiceApi implements UserDetailsService {
                 Utilisateur user = (Utilisateur) userDb.get();
                 userDetails = getUserDetailsByUser(user);
                 if (!this.passwordEncoder.matches(password, userDetails.getPassword())) {
-                    throw new BadCredentialsException("invalid password");
+                    throw new ResponseStatusException(
+                            HttpStatus.UNAUTHORIZED, "Utilisateur introuvable");
                 }
                 return this.jwtTokenUtil.generateTokens(email, user.getPassword(), user.getRole(), getScopeFromRole(user.getRole()));
             }
             else
                 throw new BadCredentialsException("invalid password3");
-
 
         } catch (NotFoundException e) {
             throw new UsernameNotFoundException(e.getMessage());
@@ -172,8 +173,7 @@ public class UserDetailsServiceApi implements UserDetailsService {
             if (!this.jwtTokenUtil.isValidRefreshToken(refreshToken)) {
                 throw new BadCredentialsException("invalid refresh token");
             }
-            String email = this.jwtTokenUtil.getUsernameFromToken(refreshToken);
-//            Optional<?> userOp = this.clientAuthService.findByUsername(username);
+            String email = this.jwtTokenUtil.getEmailFromToken(refreshToken);
             Optional<?> userOp = this.clientAuthService.findByEmail(email);
             if (userOp.isPresent()){
                 Utilisateur user = (Utilisateur) userOp.get();
@@ -181,11 +181,13 @@ public class UserDetailsServiceApi implements UserDetailsService {
                 return this.jwtTokenUtil.generateTokens(email, userDetails.getPassword(), user.getRole(), getScopeFromRole(user.getRole()));
             }
             else
-                throw new NotFoundException("");
+                throw new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED, "Utilisateur introuvable");
 
 
         } catch (NotFoundException e) {
-            throw new UsernameNotFoundException(e.getMessage());
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED, "Utilisateur introuvable");
         }
     }
 

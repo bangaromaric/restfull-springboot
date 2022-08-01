@@ -7,6 +7,7 @@ import ga.banga.restfull.service.impl.UserDetailsServiceApi;
 import lombok.AllArgsConstructor;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,6 +23,7 @@ import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -52,6 +54,8 @@ public class SecurityConfig {
     private final UserDetailsServiceApi userService;
     private final AuthenticationConfiguration configuration;
 
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -77,7 +81,7 @@ public class SecurityConfig {
                 // Set permissions on endpoints
                 .authorizeHttpRequests((authz) -> authz
                         // Our public endpoints
-                        .antMatchers("/api/public/**").permitAll()
+                        .antMatchers("/api/public/**","/api/public/token/refresh").permitAll()
                         .antMatchers("/api/user/**").hasRole(RolesConstants.ROLE_USER)
                         .antMatchers("/api/admin/**").hasRole(RolesConstants.ROLE_ADMIN)
                         .antMatchers(HttpMethod.GET, "/api/author/**").permitAll()

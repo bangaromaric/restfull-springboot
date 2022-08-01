@@ -1,6 +1,7 @@
 package ga.banga.restfull.api;
 
 import ga.banga.restfull.config.security.UserSpring;
+import ga.banga.restfull.domain.dto.AuthRefreshTokenRequest;
 import ga.banga.restfull.domain.enumeration.Roles;
 import ga.banga.restfull.config.security.jwt.JwtTokenUtil;
 import ga.banga.restfull.domain.dto.ParticulierPostDto;
@@ -9,6 +10,7 @@ import ga.banga.restfull.domain.entity.Particulier;
 import ga.banga.restfull.domain.mapper.EntrepriseMapper;
 import ga.banga.restfull.domain.mapper.ParticulierMapper;
 import ga.banga.restfull.service.UserService;
+import ga.banga.restfull.service.impl.UserDetailsServiceApi;
 import ga.banga.restfull.utils.TokenCO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +40,7 @@ import java.util.HashMap;
 public class AuthController {
 
     private final UserService clientAuthService;
+    private final UserDetailsServiceApi clientServiceApi;
 
 
     private final AuthenticationManager authenticationManager;
@@ -53,6 +56,18 @@ public class AuthController {
      */
     @PostMapping("login")
     public @ResponseBody ResponseEntity<Object> login(@RequestBody @Valid AuthRequest request) {
+
+        TokenCO tokenGen = clientServiceApi.checkCredentialsAndGetTokens(request.getEmail(), request.getPassword());
+
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.AUTHORIZATION,
+                        tokenGen.getAccess_token()
+                )
+                .header("refresh_token",
+                        tokenGen.getRefresh_token())
+                .body(tokenGen);
+        /*
         try {
             Authentication authenticate = authenticationManager
                     .authenticate(
@@ -62,7 +77,7 @@ public class AuthController {
                     );
 
             UserSpring user = (UserSpring) authenticate.getPrincipal();
-            TokenCO token = jwtTokenUtil.generateTokens(user, "");
+            TokenCO token = jwtTokenUtil.generateTokens(user, ""); //TODO: recu le role
             HashMap<String,Object> retour = new HashMap<>();
             retour.put("user",user);
             retour.put("token",token);
@@ -71,10 +86,12 @@ public class AuthController {
                             HttpHeaders.AUTHORIZATION,
                             token.getAccess_token()
                     )
-                    .body(retour /*userAuthMapper.userAuthToUserAuthDto(user)*/);
+                    .body(retour);
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        */
+
     }
 
     /**
@@ -89,6 +106,13 @@ public class AuthController {
         user.setRole(Roles.ROLE_PARTICULIER.getLibelle());
         Particulier userSave = clientAuthService.saveAndFlushParticulier(user);
         return new ResponseEntity<>(particulierMapper.particulierToParticulierGetDto(userSave),HttpStatus.CREATED);
+    }
+
+    @GetMapping("token/refresh")
+    public @ResponseBody ResponseEntity<Object> refresh(@RequestBody @Valid AuthRefreshTokenRequest request) {
+        clientServiceApi.checkCredentialsAndGetTokens(request.getRefresh_token());
+//        boolean test = jwtTokenUtil.isValidRefreshToken(request.getRefresh_token());
+    return new ResponseEntity<>(clientServiceApi.checkCredentialsAndGetTokens(request.getRefresh_token()),HttpStatus.OK);
     }
 
 

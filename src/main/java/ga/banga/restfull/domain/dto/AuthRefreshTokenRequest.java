@@ -1,4 +1,4 @@
-package ga.banga.restfull.config.security.jwt;
+package ga.banga.restfull.domain.dto;
 
 
 import lombok.AllArgsConstructor;

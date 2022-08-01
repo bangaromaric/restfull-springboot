@@ -59,7 +59,7 @@ public class JwtTokenUtil implements Serializable{
             if (StringUtils.isEmpty(token)) {
                 return false;
             }
-            final String username = getUsernameFromToken(token);
+            final String username = getEmailFromToken(token);
             return !StringUtils.isEmpty(username) && !isTokenExpired(token);
         } catch (SignatureException | IllegalArgumentException | ExpiredJwtException | MalformedJwtException e) {
             return false;
@@ -67,11 +67,11 @@ public class JwtTokenUtil implements Serializable{
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
+        final String username = getEmailFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
     public Boolean validate(String token) {
-        final String username = getUsernameFromToken(token);
+        final String username = getEmailFromToken(token);
         return (username != null && !isTokenExpired(token));
     }
     //check if the token has expired
@@ -129,7 +129,7 @@ public class JwtTokenUtil implements Serializable{
     // get attributes
     ////////////////////////////////////
     //retrieve username from jwt token
-    public String getUsernameFromToken(String token) {
+    public String getEmailFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
     //retrieve expiration date from jwt token
