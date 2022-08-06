@@ -2,21 +2,15 @@ package ga.banga.restfull.domain.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static ga.banga.restfull.service.impl.UserDetailsServiceApi.getUserAuthoritiesArray;
 
 @Getter
 @Setter
@@ -25,7 +19,7 @@ import static ga.banga.restfull.service.impl.UserDetailsServiceApi.getUserAuthor
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorValue("Client")
 @DiscriminatorColumn(name = "type_user")
-public class Utilisateur implements Serializable , UserDetails {
+public class Utilisateur implements Serializable {
     @Serial
     private static final long serialVersionUID = -6045052047859236263L;
 
@@ -53,35 +47,5 @@ public class Utilisateur implements Serializable , UserDetails {
 
     @Column(name = "role")
     private String role;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return AuthorityUtils.createAuthorityList(getUserAuthoritiesArray(this.role));
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return enabled;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return enabled;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return enabled;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
 
 }

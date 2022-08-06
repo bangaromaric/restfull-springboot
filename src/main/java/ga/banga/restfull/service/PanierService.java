@@ -1,9 +1,6 @@
 package ga.banga.restfull.service;
 
 import ga.banga.restfull.domain.entity.Panier;
-import ga.banga.restfull.domain.entity.projection.PanierInfo;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 /**
  * @author Romaric BANGA
@@ -18,15 +15,6 @@ public interface PanierService {
      * @return
      */
     Panier saveAndFlush(Panier panier);
-
-    /**
-     * @inheritDoc
-     * Recherche des panier a partir de l'email du client
-     * @param email
-     * @param pageable
-     * @return
-     */
-    Page<PanierInfo> findByCommandeClientEmail(String email, Pageable pageable);
 
 
 
