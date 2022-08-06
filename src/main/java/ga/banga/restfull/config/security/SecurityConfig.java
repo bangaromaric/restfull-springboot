@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 
 import static org.springframework.security.config.Customizer.withDefaults;
+import static org.springframework.security.web.server.authorization.IpAddressReactiveAuthorizationManager.hasIpAddress;
 
 /**
  * configuration de la security
@@ -72,16 +73,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 
                 // Set unauthorized requests exception handler
-                .exceptionHandling()
-                .authenticationEntryPoint(
-                        (request, response, ex) -> {
-                            response.sendError(
-                                    HttpServletResponse.SC_UNAUTHORIZED,
-                                    ex.getMessage()
-                            );
-                        }
-                )
-                .and()
+                .exceptionHandling().accessDeniedHandler(restAccessDeniedHandler).authenticationEntryPoint(restAuthenticationEntryPoint).and()
 
                 // Set permissions on endpoints
                 .authorizeHttpRequests((authz) -> authz
@@ -99,10 +91,6 @@ public class SecurityConfig {
 
                 // Add JWT token filter
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
-
-                //handle exception
-                .exceptionHandling().accessDeniedHandler(restAccessDeniedHandler).authenticationEntryPoint(restAuthenticationEntryPoint).and()
-
 
                 .httpBasic(withDefaults());
 
