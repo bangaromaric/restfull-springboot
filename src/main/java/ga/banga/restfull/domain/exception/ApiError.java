@@ -1,7 +1,9 @@
 package ga.banga.restfull.domain.exception;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;
@@ -10,6 +12,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 public class ApiError {
     private HttpStatus status;
     private int statusCode;
@@ -42,5 +45,11 @@ public class ApiError {
         this.statusCode = statusCode;
         this.message = message;
         this.errorss = Arrays.asList(error);
+    }
+
+    public ApiError(HttpStatus status, int statusCode, String message) {
+        this.status = status;
+        this.statusCode = statusCode;
+        this.message = message;
     }
 }

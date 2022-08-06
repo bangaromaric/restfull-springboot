@@ -147,7 +147,7 @@ public class UserDetailsServiceApi implements UserDetailsService {
 
     @Transactional(readOnly=true)
     public TokenCO checkCredentialsAndGetTokens(String email, String password) {
-        try {
+
             Optional<?> userDb = this.clientAuthService.findByEmail(email);
             UserDetails userDetails;
             if (userDb.isPresent()){
@@ -155,23 +155,23 @@ public class UserDetailsServiceApi implements UserDetailsService {
                 userDetails = getUserDetailsByUser(user);
                 if (!this.passwordEncoder.matches(password, userDetails.getPassword())) {
                     throw new ResponseStatusException(
-                            HttpStatus.UNAUTHORIZED, "Utilisateur introuvable");
+                            HttpStatus.NOT_FOUND, "Utilisateur introuvable");
                 }
                 return this.jwtTokenUtil.generateTokens(email, user.getPassword(), user.getRole(), getScopeFromRole(user.getRole()));
             }
             else
-                throw new BadCredentialsException("invalid password3");
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Utilisateur introuvable");
 
-        } catch (NotFoundException e) {
-            throw new UsernameNotFoundException(e.getMessage());
-        }
+
     }
 
     @Transactional(readOnly=true)
     public TokenCO checkCredentialsAndGetTokens(String refreshToken) {
-        try {
+
             if (!this.jwtTokenUtil.isValidRefreshToken(refreshToken)) {
-                throw new BadCredentialsException("invalid refresh token");
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Token introuvable");
             }
             String email = this.jwtTokenUtil.getEmailFromToken(refreshToken);
             Optional<?> userOp = this.clientAuthService.findByEmail(email);
@@ -182,13 +182,8 @@ public class UserDetailsServiceApi implements UserDetailsService {
             }
             else
                 throw new ResponseStatusException(
-                        HttpStatus.UNAUTHORIZED, "Utilisateur introuvable");
+                        HttpStatus.NOT_FOUND, "Utilisateur introuvable");
 
-
-        } catch (NotFoundException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED, "Utilisateur introuvable");
-        }
     }
 
 

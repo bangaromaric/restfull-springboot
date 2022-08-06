@@ -54,6 +54,11 @@ public class SecurityConfig {
     private final UserDetailsServiceApi userService;
     private final AuthenticationConfiguration configuration;
 
+    @Autowired
+    RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+@Autowired
+    RestAccessDeniedHandler restAccessDeniedHandler;
+
 
 
     @Bean
@@ -94,6 +99,10 @@ public class SecurityConfig {
 
                 // Add JWT token filter
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+
+                //handle exception
+                .exceptionHandling().accessDeniedHandler(restAccessDeniedHandler).authenticationEntryPoint(restAuthenticationEntryPoint).and()
+
 
                 .httpBasic(withDefaults());
 
